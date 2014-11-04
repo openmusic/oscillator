@@ -1,4 +1,4 @@
-var Oscillator = require('../Oscillator');
+var Oscillator = require('../');
 
 // register the oscilloscope component so we can use it
 require('openmusic-oscilloscope').register('openmusic-oscilloscope');
