@@ -10,6 +10,7 @@
 
 		frequencySignal = DCBias(context);
 		node.frequency = frequencySignal.gain;
+		node.frequency.setValueAtTime(440, context.currentTime);
 
 		initialiseOscillator();
 
