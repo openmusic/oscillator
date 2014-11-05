@@ -30,6 +30,8 @@
 
 			initialiseOscillator();
 
+			when = when !== undefined ? when : context.currentTime;
+
 			oscillator.start(when);
 		};
 
