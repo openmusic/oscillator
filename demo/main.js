@@ -10,6 +10,7 @@ var analyser = ac.createAnalyser();
 var oscilloscope = document.querySelector('openmusic-oscilloscope');
 
 osc.connect(analyser);
+osc.frequency.setValueAtTime(220, ac.currentTime);
 analyser.connect(ac.destination);
 
 oscilloscope.attachTo(analyser);

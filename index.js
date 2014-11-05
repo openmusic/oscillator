@@ -7,10 +7,15 @@
 		var node = context.createGain();
 		var oscillator;
 		var frequencySignal;
+		var properties = {};
 
 		frequencySignal = DCBias(context);
 		node.frequency = frequencySignal.gain;
 		node.frequency.setValueAtTime(440, context.currentTime);
+
+		['type'].forEach(function(name) {
+			Object.defineProperty(node, name, makePropertyGetterSetter(name));
+		});
 
 		//initialiseOscillator();
 
@@ -47,6 +52,10 @@
 			oscillator.addEventListener('ended', onEnded);
 			oscillator.connect(node);
 
+			Object.keys(properties).forEach(function(name) {
+				oscillator[name] = properties[name];
+			});
+
 			oscillator.frequency.setValueAtTime(0, context.currentTime);
 			frequencySignal.connect(oscillator.frequency);
 		}
@@ -56,6 +65,29 @@
 			t.disconnect(node);
 			frequencySignal.disconnect(t.frequency);
 			initialiseOscillator();
+		}
+
+		function makePropertyGetterSetter(property) {
+			return {
+				get: function() {
+					return getProperty(property);
+				},
+				set: function(v) {
+					setProperty(property, v);
+				},
+				enumerable: true
+			};
+		}
+
+		function getProperty(name) {
+			return properties[name];
+		}
+
+		function setProperty(name, value) {
+			properties[name] = value;
+			if(oscillator) {
+				oscillator[name] = value;
+			}
 		}
 
 	}
