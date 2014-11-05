@@ -17,16 +17,9 @@
 			Object.defineProperty(node, name, makePropertyGetterSetter(name));
 		});
 
-		//initialiseOscillator();
-
 		node.start = function(when) {
 
-			// Disconnect if existing
-			if(oscillator) {
-				oscillator.removeEventListener('ended', onEnded);
-				oscillator.disconnect(node);
-				oscillator = null;
-			}
+			deinitialiseOscillator();
 
 			initialiseOscillator();
 
@@ -50,7 +43,6 @@
 
 		function initialiseOscillator() {
 			oscillator = context.createOscillator();
-			// TODO copy type, props
 			oscillator.addEventListener('ended', onEnded);
 			oscillator.connect(node);
 
@@ -62,11 +54,17 @@
 			frequencySignal.connect(oscillator.frequency);
 		}
 
+		function deinitialiseOscillator() {
+			if(oscillator) {
+				oscillator.removeEventListener('ended', onEnded);
+				oscillator.disconnect(node);
+				frequencySignal.disconnect(oscillator.frequency);
+				oscillator = null;
+			}
+		}
+
 		function onEnded(e) {
-			var t = e.target;
-			t.disconnect(node);
-			frequencySignal.disconnect(t.frequency);
-			initialiseOscillator();
+			deinitialiseOscillator();
 		}
 
 		function makePropertyGetterSetter(property) {
@@ -103,3 +101,4 @@
 	}
 
 }).call(this);
+

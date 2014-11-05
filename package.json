@@ -1,6 +1,6 @@
 {
   "name": "openmusic-oscillator",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "An immortal oscillator",
   "main": "index.js",
   "scripts": {
