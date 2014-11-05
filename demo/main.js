@@ -12,6 +12,15 @@ var oscilloscope = document.querySelector('openmusic-oscilloscope');
 osc.connect(analyser);
 analyser.connect(ac.destination);
 
-osc.start();
-
 oscilloscope.attachTo(analyser);
+
+var waves = ['square', 'sine', 'triangle', 'sawtooth'];
+var waveIndex = 0;
+
+function trigger() {
+	osc.type = waves[ ++waveIndex % waves.length ];
+	console.log('triggering', osc.type);
+	osc.start();
+}
+
+setInterval(trigger, 1000);

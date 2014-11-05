@@ -12,9 +12,19 @@
 		node.frequency = frequencySignal.gain;
 		node.frequency.setValueAtTime(440, context.currentTime);
 
-		initialiseOscillator();
+		//initialiseOscillator();
 
 		node.start = function(when) {
+
+			// Disconnect if existing
+			if(oscillator) {
+				oscillator.removeEventListener('ended', onEnded);
+				oscillator.disconnect(node);
+				oscillator = null;
+			}
+
+			initialiseOscillator();
+
 			oscillator.start(when);
 		};
 
@@ -34,14 +44,14 @@
 		function initialiseOscillator() {
 			oscillator = context.createOscillator();
 			// TODO copy type, props
-			oscillator.onended = onOscillatorEnded;
+			oscillator.addEventListener('ended', onEnded);
 			oscillator.connect(node);
 
 			oscillator.frequency.setValueAtTime(0, context.currentTime);
 			frequencySignal.connect(oscillator.frequency);
 		}
 
-		function onOscillatorEnded(e) {
+		function onEnded(e) {
 			var t = e.target;
 			t.disconnect(node);
 			frequencySignal.disconnect(t.frequency);
